@@ -8,7 +8,7 @@ export class DestinosController {
 
   @Post()
   create(@Body() destino: Destino) {
-    this.destinosService.createDestino(destino);
+    return this.destinosService.createDestino(destino);
   }
 
   @Get()
