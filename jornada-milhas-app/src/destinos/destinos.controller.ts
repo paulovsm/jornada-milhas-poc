@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
 import { DestinosService } from './destinos.service';
 import { Destino } from './destino.interface';
 
@@ -12,7 +12,12 @@ export class DestinosController {
   }
 
   @Get()
-  findAll(@Query('nome') nome: string): Destino[] {
+  findAll(): Destino[] {                                                                                                                                                                            
+    return this.destinosService.findAll(); 
+  }
+
+  @Get()
+  findByName(@Query('nome') nome: string): any {
     if (nome) {
       const destinos = this.destinosService.findByName(nome);
       if (destinos.length === 0) {
