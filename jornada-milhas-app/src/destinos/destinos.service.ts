@@ -17,6 +17,22 @@ export class DestinosService {
     return this.destinos;
   }
 
+  updateDestino(id: string, destino: Destino) {
+    const index = this.destinos.findIndex((dest) => dest.id === id);
+    if (index !== -1) {
+      this.destinos[index] = { id, ...destino };
+      return this.destinos[index];
+    }
+    return null;
+  }
+
+  deleteDestino(id: string) {
+    const index = this.destinos.findIndex((dest) => dest.id === id);
+    if (index !== -1) {
+      this.destinos.splice(index, 1);
+    }
+  }
+}
   update(id: number, destino: Destino) {
     this.destinos[id] = destino;
   }
