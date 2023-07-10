@@ -8,7 +8,7 @@ export class DestinosController {
 
   @Post()
   create(@Body() destino: Destino) {
-    this.destinosService.create(destino);
+    this.destinosService.createDestino(destino);
   }
 
   @Get()
@@ -17,12 +17,12 @@ export class DestinosController {
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() destino: Destino) {
-    this.destinosService.update(id, destino);
+  update(@Param('id') id: string, @Body() destino: Destino) {
+    return this.destinosService.updateDestino(id, destino);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: number) {
-    this.destinosService.delete(id);
+  delete(@Param('id') id: string) {
+   return this.destinosService.deleteDestino(id);
   }
 }
