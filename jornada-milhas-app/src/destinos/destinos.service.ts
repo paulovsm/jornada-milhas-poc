@@ -17,7 +17,7 @@ export class DestinosService {
     return this.destinos;
   }
 
-  updateDestino(id: string, destino: Destino) {
+  updateDestino(id: string, destino: Destino): Destino {
     const index = this.destinos.findIndex((dest) => dest.id === id);
     if (index !== -1) {
       this.destinos[index] = { id, ...destino };

@@ -24,21 +24,21 @@ describe('DestinosService', () => {
   });
 
   it('should add a destino', () => {
-    const destino: Destino = { nome: 'Test', destino: 'This is a test', foto: 'test.jpg' };
+    const destino: Destino = { preco: 11, nome: 'This is a test', foto: 'test.jpg' };
     const destinoCriado = service.createDestino(destino);
     expect(service.findAll()).toContain(destinoCriado);
   });
 
   it('should update a destino', () => {
-    const destino: Destino = { nome: 'Test', destino: 'This is a test', foto: 'test.jpg' };
+    const destino: Destino = { preco: 11, nome: 'This is a test', foto: 'test.jpg' };
     const destinoCriado = service.createDestino(destino);
-    const updatedDestino: Destino = { id: destinoCriado.id, nome: 'Updated', destino: 'Updated test', foto: 'updated.jpg' };
+    const updatedDestino: Destino = { id: destinoCriado.id, preco: 12, nome: 'Updated test', foto: 'updated.jpg' };
     service.updateDestino(updatedDestino.id, updatedDestino);
-    expect(service.findAll()).toContain(updatedDestino);
+    expect(service.findAll()).toContainEqual(updatedDestino);
   });
 
   it('should delete a destino', () => {
-    const destino: Destino = { nome: 'Test', destino: 'This is a test', foto: 'test.jpg' };
+    const destino: Destino = { nome: 'Test', preco: 11, foto: 'test.jpg' };
     const destinoCriado = service.createDestino(destino);
     service.deleteDestino(destinoCriado.id);
     expect(service.findAll()).not.toContain(destino);
