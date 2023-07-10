@@ -4,7 +4,7 @@ import { Destino } from './destino.interface';
 
 @Controller('destinos')
 export class DestinosController {
-  constructor(private readonly destinosService: DestinosService) {}
+  constructor(private readonly destinosService: DestinosService) { }
 
   @Post()
   create(@Body() destino: Destino) {
