@@ -17,6 +17,10 @@ export class DestinosService {
     return this.destinos;
   }
 
+  findByName(nome: string): Destino[] {
+    return this.destinos.filter(destino => destino.nome.includes(nome));
+  }
+
   updateDestino(id: string, destino: Destino): Destino {
     const index = this.destinos.findIndex((dest) => dest.id === id);
     if (index !== -1) {

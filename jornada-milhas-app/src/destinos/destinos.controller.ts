@@ -12,7 +12,14 @@ export class DestinosController {
   }
 
   @Get()
-  findAll(): Destino[] {
+  findAll(@Query('nome') nome: string): Destino[] {
+    if (nome) {
+      const destinos = this.destinosService.findByName(nome);
+      if (destinos.length === 0) {
+        return { mensagem: 'Nenhum destino foi encontrado' };
+      }
+      return destinos;
+    }
     return this.destinosService.findAll();
   }
 
