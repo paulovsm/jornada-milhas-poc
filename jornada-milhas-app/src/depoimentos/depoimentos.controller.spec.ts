@@ -91,4 +91,13 @@ describe('DepoimentosController', () => {
     });
   });
 
+  describe('findByName', () => {
+    it('should return a depoimento with the given name', async () => {
+      const depoimento: Depoimento = { nome: 'Test', depoimento: 'This is a test', foto: 'test.jpg' };
+      service.createDepoimento(depoimento);
+      const foundDepoimento = await controller.findByName('Test');
+      expect(foundDepoimento).toEqual(depoimento);
+    });
+  });
+
 });

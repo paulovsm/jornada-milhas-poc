@@ -44,4 +44,11 @@ describe('DestinosService', () => {
     expect(service.findAll()).not.toContain(destino);
   });
 
+  it('should find a destino by name', () => {
+    const destino: Destino = { nome: 'Test', preco: 11, foto: 'test.jpg' };
+    service.createDestino(destino);
+    const foundDestino = service.findByName('Test');
+    expect(foundDestino).toEqual(destino);
+  });
+
 });
