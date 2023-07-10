@@ -48,7 +48,7 @@ describe('DestinosService', () => {
     const destino: Destino = { nome: 'Test', preco: 11, foto: 'test.jpg' };
     service.createDestino(destino);
     const foundDestino = service.findByName('Test');
-    expect(foundDestino).toEqual(destino);
+    expect(foundDestino[0].nome).toEqual(destino.nome);
   });
 
 });

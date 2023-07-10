@@ -37,6 +37,7 @@ describe('DestinosController', () => {
               preco: 200,
             }),
             deleteDestino: jest.fn().mockResolvedValue({}),
+            findByName: jest.fn().mockResolvedValue(destinosMock[0]),
           },
         },
       ],
@@ -79,6 +80,16 @@ describe('DestinosController', () => {
     it('should delete a destino and return it', async () => {
       expect(await controller.delete(randomId)).toEqual({});
       expect(service.deleteDestino).toHaveBeenCalledWith(randomId);
+    });
+  });
+
+
+  describe('findByName', () => {
+    it('should return a depoimento with the given name', async () => {
+      const depoimento: Destino = { nome: 'Test', preco: 100, foto: 'test.jpg' };
+      service.createDestino(depoimento);
+      const foundDepoimento = await controller.findByName('Test');
+      expect(foundDepoimento).toEqual(depoimento);
     });
   });
 
