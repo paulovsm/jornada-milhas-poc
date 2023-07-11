@@ -3,7 +3,7 @@ import { IsOptional, IsUUID, IsUrl, IsNotEmpty, MinLength, IsNumber } from 'clas
 export class Destino {
   @IsOptional()
   @IsUUID()
-  id: string;
+  id?: string;
 
   @IsNotEmpty()
   @IsUrl()
@@ -11,7 +11,7 @@ export class Destino {
 
   @IsNotEmpty()
   @MinLength(3)
-  name: string;
+  nome: string;
 
   @IsNotEmpty()
   @IsNumber()
