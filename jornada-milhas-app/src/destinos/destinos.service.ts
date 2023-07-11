@@ -21,6 +21,14 @@ export class DestinosService {
     return this.destinos.filter(destino => destino.nome.includes(nome));
   }
 
+  findById(id: string): Destino {                                                                                                                                                                 
+    const destino = this.destinos.find(dest => dest.id === id);                                                                                                                               
+    if (!destino) {                                                                                                                                                                           
+      throw new NotFoundException('Destino não encontrado');                                                                                                                                       
+    }                                                                                                                                                                                         
+    return destino;                                                                                                                                                                           
+  } 
+
   updateDestino(id: string, destino: Destino): Destino {
     const index = this.destinos.findIndex((dest) => dest.id === id);
     if (index !== -1) {

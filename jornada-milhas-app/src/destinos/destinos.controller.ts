@@ -28,6 +28,11 @@ export class DestinosController {
     return this.destinosService.findAll();
   }
 
+  @Get(':id')
+  findById(@Param('id') id: string) {
+    return this.destinosService.findById(id);
+  }
+
   @Put(':id')
   update(@Param('id') id: string, @Body() destino: Destino) {
     return this.destinosService.updateDestino(id, destino);
