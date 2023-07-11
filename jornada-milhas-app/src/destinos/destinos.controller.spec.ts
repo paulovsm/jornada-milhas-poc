@@ -83,6 +83,15 @@ describe('DestinosController', () => {
     });
   });
 
+  describe('findById', () => {
+    it('should return a destino with the given id', async () => {
+      const destino: Destino = { id: randomId, nome: 'Test', preco: 100, foto: 'test.jpg' };
+      service.createDestino(destino);
+      const foundDestino = await controller.findById(randomId);
+      expect(foundDestino).toEqual(destino);
+    });
+  });
+
 
   describe('findByName', () => {
     it('should return a depoimento with the given name', async () => {

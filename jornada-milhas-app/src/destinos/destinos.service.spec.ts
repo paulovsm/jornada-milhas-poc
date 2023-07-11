@@ -51,4 +51,11 @@ describe('DestinosService', () => {
     expect(foundDestino[0].nome).toEqual(destino.nome);
   });
 
+  it('should find a destino by id', () => {
+    const destino: Destino = { nome: 'Test', preco: 11, foto: 'test.jpg' };
+    const destinoCriado = service.createDestino(destino);
+    const foundDestino = service.findById(destinoCriado.id);
+    expect(foundDestino).toEqual(destinoCriado);
+  });
+
 });
