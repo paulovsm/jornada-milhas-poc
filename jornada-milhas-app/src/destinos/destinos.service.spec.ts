@@ -58,4 +58,9 @@ describe('DestinosService', () => {
     expect(foundDestino).toEqual(destinoCriado);
   });
 
+  it('should not create a destino when TextoDescritivo is empty', () => {
+    const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: '' };
+    expect(() => service.createDestino(destino)).toThrowError();
+  });
+
 });
