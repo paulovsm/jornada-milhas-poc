@@ -23,23 +23,23 @@ describe('DestinosService', () => {
     expect(service.findAll()).toBe(result);
   });
 
-  it('should add a destino', () => {
+  it('should add a destino', async () => {
     const destino: Destino = { preco: 11, nome: 'This is a test', foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
-    const destinoCriado = service.createDestino(destino);
+    const destinoCriado = await service.createDestino(destino);
     expect(service.findAll()).toContain(destinoCriado);
   });
 
-  it('should update a destino', () => {
+  it('should update a destino', async () => {
     const destino: Destino = { preco: 11, nome: 'This is a test', foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
-    const destinoCriado = service.createDestino(destino);
+    const destinoCriado = await service.createDestino(destino);
     const updatedDestino: Destino = { id: destinoCriado.id, preco: 12, nome: 'Updated test', foto1: 'updated.jpg', foto2: 'updated.jpg', meta: 'meta', textoDescritivo: 'texto' };
     service.updateDestino(updatedDestino.id, updatedDestino);
     expect(service.findAll()).toContainEqual(updatedDestino);
   });
 
-  it('should delete a destino', () => {
+  it('should delete a destino', async () => {
     const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
-    const destinoCriado = service.createDestino(destino);
+    const destinoCriado = await service.createDestino(destino);
     service.deleteDestino(destinoCriado.id);
     expect(service.findAll()).not.toContain(destino);
   });
@@ -51,16 +51,22 @@ describe('DestinosService', () => {
     expect(foundDestino[0].nome).toEqual(destino.nome);
   });
 
-  it('should find a destino by id', () => {
+  it('should find a destino by id', async () => {
     const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
-    const destinoCriado = service.createDestino(destino);
+    const destinoCriado = await service.createDestino(destino);
     const foundDestino = service.findById(destinoCriado.id);
     expect(foundDestino).toEqual(destinoCriado);
   });
 
-  it('should not create a destino when TextoDescritivo is empty', () => {
+  it('should not create a destino when TextoDescritivo is empty', async () => {
     const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: '' };
-    expect(() => service.createDestino(destino)).toThrowError();
+    const expectedText = 'This is a descriptive text for Rio de Janeiro.';
+
+    jest.spyOn(service, 'generateDescriptiveText').mockResolvedValue(expectedText);
+
+    const destinoCriado = await service.createDestino(destino);
+
+    expect(destinoCriado.textoDescritivo).toEqual(expectedText);
   });
 
 });

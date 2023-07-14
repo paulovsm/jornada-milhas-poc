@@ -66,7 +66,7 @@ export class DestinosService {
     return {};
   }
 
-  private async generateDescriptiveText(destination: string): Promise<string> {
+  public async generateDescriptiveText(destination: string): Promise<string> {
     let gptResponse;
 
     try {
