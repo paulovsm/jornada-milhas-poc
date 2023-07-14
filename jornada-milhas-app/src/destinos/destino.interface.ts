@@ -26,5 +26,5 @@ export class Destino {
   meta: string;
 
   @IsOptional()
-  textoDescritivo: string;
+  textoDescritivo?: string;
 }

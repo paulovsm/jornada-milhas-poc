@@ -24,35 +24,35 @@ describe('DestinosService', () => {
   });
 
   it('should add a destino', () => {
-    const destino: Destino = { preco: 11, nome: 'This is a test', foto: 'test.jpg' };
+    const destino: Destino = { preco: 11, nome: 'This is a test', foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
     const destinoCriado = service.createDestino(destino);
     expect(service.findAll()).toContain(destinoCriado);
   });
 
   it('should update a destino', () => {
-    const destino: Destino = { preco: 11, nome: 'This is a test', foto: 'test.jpg' };
+    const destino: Destino = { preco: 11, nome: 'This is a test', foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
     const destinoCriado = service.createDestino(destino);
-    const updatedDestino: Destino = { id: destinoCriado.id, preco: 12, nome: 'Updated test', foto: 'updated.jpg' };
+    const updatedDestino: Destino = { id: destinoCriado.id, preco: 12, nome: 'Updated test', foto1: 'updated.jpg', foto2: 'updated.jpg', meta: 'meta', textoDescritivo: 'texto' };
     service.updateDestino(updatedDestino.id, updatedDestino);
     expect(service.findAll()).toContainEqual(updatedDestino);
   });
 
   it('should delete a destino', () => {
-    const destino: Destino = { nome: 'Test', preco: 11, foto: 'test.jpg' };
+    const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
     const destinoCriado = service.createDestino(destino);
     service.deleteDestino(destinoCriado.id);
     expect(service.findAll()).not.toContain(destino);
   });
 
   it('should find a destino by name', () => {
-    const destino: Destino = { nome: 'Test', preco: 11, foto: 'test.jpg' };
+    const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
     service.createDestino(destino);
     const foundDestino = service.findByName('Test');
     expect(foundDestino[0].nome).toEqual(destino.nome);
   });
 
   it('should find a destino by id', () => {
-    const destino: Destino = { nome: 'Test', preco: 11, foto: 'test.jpg' };
+    const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
     const destinoCriado = service.createDestino(destino);
     const foundDestino = service.findById(destinoCriado.id);
     expect(foundDestino).toEqual(destinoCriado);
