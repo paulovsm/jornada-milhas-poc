@@ -1,10 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Depoimento } from './depoimento.interface'
 import { randomUUID } from 'crypto';
+import { SupabaseClient, createClient } from '@supabase/supabase-js'
 
 @Injectable()
 export class DepoimentosService {
     private depoimentos: Depoimento[] = [];
+    private supabase: SupabaseClient;
+
+    constructor() {
+        this.supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+    }
 
     getDepoimentos(): Depoimento[] {
         return this.depoimentos;
