@@ -12,52 +12,45 @@ export class DepoimentosService {
         this.supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
     }
 
-    getDepoimentos(): Depoimento[] {
-        return this.depoimentos;
+    async getDepoimentos(): Promise<Depoimento[]> {
+        const { data, error } = await this.supabase.from('depoimentos').select('*');
+        if (error) throw error;
+        return data;
     }
 
-    createDepoimento(depoimento: Depoimento): Depoimento {
-        depoimento.id = randomUUID();
-        this.depoimentos.push(depoimento);
-
-        return depoimento;
+    async createDepoimento(depoimento: Depoimento): Promise<Depoimento> {
+        const { data, error } = await this.supabase.from('depoimentos').insert([depoimento]);
+        if (error) throw error;
+        return data[0];
     }
 
-    updateDepoimento(depoimentoAtualizado: Depoimento): Depoimento {
-        const index = this.depoimentos.findIndex((dep) => dep.id === depoimentoAtualizado.id);
-        if (index !== -1) {
-            this.depoimentos[index] = depoimentoAtualizado;
-        } else {
-            throw new NotFoundException(`Depoimento com o ID ${depoimentoAtualizado.id} não encontrado`);
+    async updateDepoimento(depoimentoAtualizado: Depoimento): Promise<Depoimento> {
+        const { data, error } = await this.supabase
+            .from('depoimentos')
+            .update(depoimentoAtualizado)
+            .match({ id: depoimentoAtualizado.id });
+        if (error) throw error;
+        return data[0];
+    }
+
+    async deleteDepoimento(id: string): Promise<void> {
+        const { error } = await this.supabase.from('depoimentos').delete().match({ id });
+        if (error) throw error;
+    }
+
+    async getRandomDepoimentos(): Promise<Depoimento[]> {
+        const { data, error } = await this.supabase.from('depoimentos').select('*');
+        if (error) throw error;
+        if (data.length <= 3) {
+            return data;
         }
 
-        return this.depoimentos[index];
-    }
-
-    deleteDepoimento(id: string) {
-        // Implementação da lógica do delete
-        const index = this.depoimentos.findIndex((dep) => dep.id === id);
-        if (index !== -1) {
-            this.depoimentos.splice(index, 1);
-        } else {
-            throw new NotFoundException(`Depoimento com o ID ${id} não encontrado`);
-        }
-
-        return {};
-    }
-
-    getRandomDepoimentos(): Depoimento[] {
-        if (this.depoimentos.length <= 3) {
-            return this.depoimentos;
-        }
-
-        const depoimentosCopy = [...this.depoimentos];
         const depoimentosAleatorios = [];
         for (let i = 0; i < 3; i++) {
-            const randomIndex = Math.floor(Math.random() * depoimentosCopy.length);
-            depoimentosAleatorios.push(depoimentosCopy[randomIndex]);
+            const randomIndex = Math.floor(Math.random() * data.length);
+            depoimentosAleatorios.push(data[randomIndex]);
             // Remove o depoimento selecionado para não ser selecionado novamente
-            depoimentosCopy.splice(randomIndex, 1);
+            data.splice(randomIndex, 1);
         }
 
         return depoimentosAleatorios;
