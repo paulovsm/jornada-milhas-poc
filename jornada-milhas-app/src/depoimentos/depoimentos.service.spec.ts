@@ -17,45 +17,45 @@ describe('DepoimentosService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should return an array of depoimentos', () => {
+  it('should return an array of depoimentos', async () => {
     const result: Depoimento[] = [];
-    jest.spyOn(service, 'getDepoimentos').mockImplementation(() => result);
-    expect(service.getDepoimentos()).toBe(result);
+    jest.spyOn(service, 'getDepoimentos').mockImplementation(() => Promise.resolve(result));
+    expect(await service.getDepoimentos()).toBe(result);
   });
 
-  it('should add a depoimento', () => {
+  it('should add a depoimento', async () => {
     const depoimento: Depoimento = { nome: 'Test', depoimento: 'This is a test', foto: 'test.jpg' };
-    const depoimentoCriado = service.createDepoimento(depoimento);
-    expect(service.getDepoimentos()).toContain(depoimentoCriado);
+    const depoimentoCriado = await service.createDepoimento(depoimento);
+    expect(await service.getDepoimentos()).toContain(depoimentoCriado);
   });
 
-  it('should update a depoimento', () => {
+  it('should update a depoimento', async () => {
     const depoimento: Depoimento = { nome: 'Test', depoimento: 'This is a test', foto: 'test.jpg' };
-    const depoimentoCriado = service.createDepoimento(depoimento);
+    const depoimentoCriado = await service.createDepoimento(depoimento);
     const updatedDepoimento: Depoimento = { id: depoimentoCriado.id, nome: 'Updated', depoimento: 'Updated test', foto: 'updated.jpg' };
-    service.updateDepoimento(updatedDepoimento);
-    expect(service.getDepoimentos()).toContain(updatedDepoimento);
+    await service.updateDepoimento(updatedDepoimento);
+    expect(await service.getDepoimentos()).toContain(updatedDepoimento);
   });
 
-  it('should delete a depoimento', () => {
+  it('should delete a depoimento', async () => {
     const depoimento: Depoimento = { nome: 'Test', depoimento: 'This is a test', foto: 'test.jpg' };
-    const depoimentoCriado = service.createDepoimento(depoimento);
-    service.deleteDepoimento(depoimentoCriado.id);
-    expect(service.getDepoimentos()).not.toContain(depoimento);
+    const depoimentoCriado = await service.createDepoimento(depoimento);
+    await service.deleteDepoimento(depoimentoCriado.id);
+    expect(await service.getDepoimentos()).not.toContain(depoimento);
   });
 
-  it('should return 3 random depoimentos', () => {
+  it('should return 3 random depoimentos', async () => {
     // Adiciona 5 depoimentos de teste (assume que createDepoimento está funcionando corretamente)
     for (let i = 0; i < 5; i++) {
-      service.createDepoimento({ nome: `Test ${i}`, depoimento: `Test ${i}`, foto: `test${i}.jpg` });
+      await service.createDepoimento({ nome: `Test ${i}`, depoimento: `Test ${i}`, foto: `test${i}.jpg` });
     }
 
-    const randomDepoimentos = service.getRandomDepoimentos();
+    const randomDepoimentos = await service.getRandomDepoimentos();
 
     expect(randomDepoimentos).toHaveLength(3);
 
-    randomDepoimentos.forEach((depoimento) => {
-      expect(service.getDepoimentos()).toContain(depoimento);
+    randomDepoimentos.forEach(async (depoimento) => {
+      expect(await service.getDepoimentos()).toContain(depoimento);
     });
   });
 

@@ -5,7 +5,6 @@ import { SupabaseClient, createClient } from '@supabase/supabase-js'
 
 @Injectable()
 export class DepoimentosService {
-    private depoimentos: Depoimento[] = [];
     private supabase: SupabaseClient;
 
     constructor() {
@@ -21,6 +20,7 @@ export class DepoimentosService {
     async createDepoimento(depoimento: Depoimento): Promise<Depoimento> {
         const { data, error } = await this.supabase.from('depoimentos').insert([depoimento]);
         if (error) throw error;
+        if (!data) throw new Error('Failed to create depoimento');
         return data[0];
     }
 
@@ -30,6 +30,7 @@ export class DepoimentosService {
             .update(depoimentoAtualizado)
             .match({ id: depoimentoAtualizado.id });
         if (error) throw error;
+        if (!data) throw new Error('Failed to update depoimento');
         return data[0];
     }
 
