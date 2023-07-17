@@ -1,13 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DepoimentosService } from './depoimentos.service';
 import { Depoimento } from './depoimento.interface';
+import { createMock } from '@golevelup/ts-jest';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 describe('DepoimentosService', () => {
   let service: DepoimentosService;
+  let mockSupabaseClient: SupabaseClient;
 
   beforeEach(async () => {
+    mockSupabaseClient = createMock<SupabaseClient>();
+
     const module: TestingModule = await Test.createTestingModule({
-      providers: [DepoimentosService],
+      providers: [
+        DepoimentosService,
+        {
+          provide: 'SupabaseClient',
+          useValue: mockSupabaseClient,
+        },
+      ],
     }).compile();
 
     service = module.get<DepoimentosService>(DepoimentosService);
