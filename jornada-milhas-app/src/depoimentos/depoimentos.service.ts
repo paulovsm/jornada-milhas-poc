@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Depoimento } from './depoimento.interface'
-import { randomUUID } from 'crypto';
 import { SupabaseClient, createClient } from '@supabase/supabase-js'
 
 @Injectable()
@@ -12,13 +11,18 @@ export class DepoimentosService {
     }
 
     async getDepoimentos(): Promise<Depoimento[]> {
-        const { data, error } = await this.supabase.from('depoimentos').select('*');
+
+        let { data: depoimentos, error } = await this.supabase
+            .from('depoimentos')
+            .select('*')
+
         if (error) throw error;
-        return data;
+        
+        return depoimentos;
     }
 
     async createDepoimento(depoimento: Depoimento): Promise<Depoimento> {
-        const { data, error } = await this.supabase.from('depoimentos').insert([depoimento]);
+        const { data, error } = await this.supabase.from('depoimentos').insert([depoimento]).select();
         if (error) throw error;
         if (!data) throw new Error('Failed to create depoimento');
         return data[0];
@@ -28,7 +32,8 @@ export class DepoimentosService {
         const { data, error } = await this.supabase
             .from('depoimentos')
             .update(depoimentoAtualizado)
-            .match({ id: depoimentoAtualizado.id });
+            .match({ id: depoimentoAtualizado.id })
+            .select();
         if (error) throw error;
         if (!data) throw new Error('Failed to update depoimento');
         return data[0];

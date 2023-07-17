@@ -4,7 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 
 async function bootstrap() {
-  //dotenv.config();
+  dotenv.config();
   const app = await NestFactory.create(AppModule);
 
   // Habilitando CORS

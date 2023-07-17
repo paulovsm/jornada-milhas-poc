@@ -2,7 +2,6 @@ import { IsUUID, IsOptional, IsNotEmpty, IsUrl, Min, MinLength } from 'class-val
 
 export class Depoimento {
     @IsOptional()
-    @IsUUID()
     id?: string;
 
     @IsNotEmpty({ message: 'A foto não pode ser vazio' })
