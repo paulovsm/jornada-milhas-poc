@@ -20,7 +20,7 @@ export class DestinosService {
   async createDestino(destino: Destino): Promise<Destino> {
     const newDestino = { ...destino };
 
-    if (!destino.textoDescritivo) {
+    if (!destino.textoDescritivo || destino.textoDescritivo === '') {
       newDestino.textoDescritivo = await this.generateDescriptiveText(destino.nome);
     }
 
@@ -42,7 +42,6 @@ export class DestinosService {
   }
 
   async findByName(nome: string): Promise<Destino[]> {
-    console.log("Nome: " + nome);
     let { data: destinos, error } = await this.supabase
       .getClient()
       .from('destinos')

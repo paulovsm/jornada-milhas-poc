@@ -175,6 +175,10 @@ describe('DestinosService', () => {
   it('should generate descriptive text for a destino when TextoDescritivo is empty', async () => {
     const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: '' };
     const expectedText = 'This is a descriptive text for Rio de Janeiro.';
+    const destinoUpdated = { ...destino, textoDescritivo: expectedText };
+
+    mockSupabaseClient.insert.mockReturnThis();
+    mockSupabaseClient.select.mockResolvedValue({ data: [destinoUpdated], error: null });
 
     jest.spyOn(service, 'generateDescriptiveText').mockResolvedValue(expectedText);
 
@@ -183,13 +187,16 @@ describe('DestinosService', () => {
     expect(destinoCriado.textoDescritivo).toEqual(expectedText);
     verify(mockSupabase.getClient()).once();
     expect(mockSupabaseClient.from).toHaveBeenCalledWith('destinos');
-    expect(mockSupabaseClient.insert).toHaveBeenCalledWith([destino]);
+    expect(mockSupabaseClient.insert).toHaveBeenCalledWith([destinoUpdated]);
     expect(mockSupabaseClient.select).toHaveBeenCalled();
   });
 
   it('should not generate descriptive text for a destino when TextoDescritivo is not empty', async () => {
     const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'Existing text' };
     const expectedText = 'Existing text';
+
+    mockSupabaseClient.insert.mockReturnThis();
+    mockSupabaseClient.select.mockResolvedValue({ data: [destino], error: null });
 
     jest.spyOn(service, 'generateDescriptiveText');
 
