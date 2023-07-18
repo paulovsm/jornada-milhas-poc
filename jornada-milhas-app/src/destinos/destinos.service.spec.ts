@@ -146,7 +146,8 @@ describe('DestinosService', () => {
 
   it('should find a destino by name', async () => {
     const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
-    mockSupabaseClient.select.mockResolvedValue({ data: [destino], error: null });
+    mockSupabaseClient.select.mockReturnThis();
+    mockSupabaseClient.ilike.mockResolvedValue({ data: [destino], error: null });
 
     const foundDestino = await service.findByName('Test');
     expect(foundDestino[0].nome).toEqual(destino.nome);
@@ -159,7 +160,8 @@ describe('DestinosService', () => {
 
   it('should find a destino by id', async () => {
     const destino: Destino = { id: '1', nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
-    mockSupabaseClient.select.mockResolvedValue({ data: [destino], error: null });
+    mockSupabaseClient.select.mockReturnThis();
+    mockSupabaseClient.eq.mockResolvedValue({ data: [destino], error: null });
 
     const foundDestino = await service.findById(destino.id);
     expect(foundDestino).toEqual(destino);
