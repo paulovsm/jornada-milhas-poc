@@ -144,19 +144,31 @@ describe('DestinosService', () => {
     expect(mockSupabaseClient.match).toHaveBeenCalledWith({ id });
   });
 
-  // it('should find a destino by name', async () => {
-  //   const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
-  //   await service.createDestino(destino);
-  //   const foundDestino = await service.findByName('Test');
-  //   expect(foundDestino[0].nome).toEqual(destino.nome);
-  // });
+  it('should find a destino by name', async () => {
+    const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
+    mockSupabaseClient.select.mockResolvedValue({ data: [destino], error: null });
 
-  // it('should find a destino by id', async () => {
-  //   const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
-  //   const destinoCriado = await service.createDestino(destino);
-  //   const foundDestino = await service.findById(destinoCriado.id);
-  //   expect(foundDestino).toEqual(destinoCriado);
-  // });
+    const foundDestino = await service.findByName('Test');
+    expect(foundDestino[0].nome).toEqual(destino.nome);
+
+    verify(mockSupabase.getClient()).once();
+    expect(mockSupabaseClient.from).toHaveBeenCalledWith('destinos');
+    expect(mockSupabaseClient.select).toHaveBeenCalledWith('*');
+    expect(mockSupabaseClient.ilike).toHaveBeenCalledWith('nome', '%Test%');
+  });
+
+  it('should find a destino by id', async () => {
+    const destino: Destino = { id: '1', nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
+    mockSupabaseClient.select.mockResolvedValue({ data: [destino], error: null });
+
+    const foundDestino = await service.findById(destino.id);
+    expect(foundDestino).toEqual(destino);
+
+    verify(mockSupabase.getClient()).once();
+    expect(mockSupabaseClient.from).toHaveBeenCalledWith('destinos');
+    expect(mockSupabaseClient.select).toHaveBeenCalledWith('*');
+    expect(mockSupabaseClient.eq).toHaveBeenCalledWith('id', destino.id);
+  });
 
   // it('should generate descriptive text for a destino when TextoDescritivo is empty', async () => {
   //   const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: '' };
