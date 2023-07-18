@@ -172,15 +172,35 @@ describe('DestinosService', () => {
     expect(mockSupabaseClient.eq).toHaveBeenCalledWith('id', destino.id);
   });
 
-  // it('should generate descriptive text for a destino when TextoDescritivo is empty', async () => {
-  //   const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: '' };
-  //   const expectedText = 'This is a descriptive text for Rio de Janeiro.';
+  it('should generate descriptive text for a destino when TextoDescritivo is empty', async () => {
+    const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: '' };
+    const expectedText = 'This is a descriptive text for Rio de Janeiro.';
 
-  //   jest.spyOn(service, 'generateDescriptiveText').mockResolvedValue(expectedText);
+    jest.spyOn(service, 'generateDescriptiveText').mockResolvedValue(expectedText);
 
-  //   const destinoCriado = await service.createDestino(destino);
+    const destinoCriado = await service.createDestino(destino);
 
-  //   expect(destinoCriado.textoDescritivo).toEqual(expectedText);
-  // });
+    expect(destinoCriado.textoDescritivo).toEqual(expectedText);
+    verify(mockSupabase.getClient()).once();
+    expect(mockSupabaseClient.from).toHaveBeenCalledWith('destinos');
+    expect(mockSupabaseClient.insert).toHaveBeenCalledWith([destino]);
+    expect(mockSupabaseClient.select).toHaveBeenCalled();
+  });
+
+  it('should not generate descriptive text for a destino when TextoDescritivo is not empty', async () => {
+    const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'Existing text' };
+    const expectedText = 'Existing text';
+
+    jest.spyOn(service, 'generateDescriptiveText');
+
+    const destinoCriado = await service.createDestino(destino);
+
+    expect(destinoCriado.textoDescritivo).toEqual(expectedText);
+    expect(service.generateDescriptiveText).not.toHaveBeenCalled();
+    verify(mockSupabase.getClient()).once();
+    expect(mockSupabaseClient.from).toHaveBeenCalledWith('destinos');
+    expect(mockSupabaseClient.insert).toHaveBeenCalledWith([destino]);
+    expect(mockSupabaseClient.select).toHaveBeenCalled();
+  });
 
 });
