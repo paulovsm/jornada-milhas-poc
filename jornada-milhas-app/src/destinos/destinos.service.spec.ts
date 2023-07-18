@@ -33,32 +33,32 @@ describe('DestinosService', () => {
     const destino: Destino = { preco: 11, nome: 'This is a test', foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
     const destinoCriado = await service.createDestino(destino);
     const updatedDestino: Destino = { id: destinoCriado.id, preco: 12, nome: 'Updated test', foto1: 'updated.jpg', foto2: 'updated.jpg', meta: 'meta', textoDescritivo: 'texto' };
-    service.updateDestino(updatedDestino.id, updatedDestino);
+    await service.updateDestino(updatedDestino.id, updatedDestino);
     expect(service.findAll()).toContainEqual(updatedDestino);
   });
 
   it('should delete a destino', async () => {
     const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
     const destinoCriado = await service.createDestino(destino);
-    service.deleteDestino(destinoCriado.id);
+    await service.deleteDestino(destinoCriado.id);
     expect(service.findAll()).not.toContain(destino);
   });
 
-  it('should find a destino by name', () => {
+  it('should find a destino by name', async () => {
     const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
-    service.createDestino(destino);
-    const foundDestino = service.findByName('Test');
+    await service.createDestino(destino);
+    const foundDestino = await service.findByName('Test');
     expect(foundDestino[0].nome).toEqual(destino.nome);
   });
 
   it('should find a destino by id', async () => {
     const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: 'texto' };
     const destinoCriado = await service.createDestino(destino);
-    const foundDestino = service.findById(destinoCriado.id);
+    const foundDestino = await service.findById(destinoCriado.id);
     expect(foundDestino).toEqual(destinoCriado);
   });
 
-  it('should not create a destino when TextoDescritivo is empty', async () => {
+  it('should generate descriptive text for a destino when TextoDescritivo is empty', async () => {
     const destino: Destino = { nome: 'Test', preco: 11, foto1: 'test.jpg', foto2: 'test.jpg', meta: 'meta', textoDescritivo: '' };
     const expectedText = 'This is a descriptive text for Rio de Janeiro.';
 
