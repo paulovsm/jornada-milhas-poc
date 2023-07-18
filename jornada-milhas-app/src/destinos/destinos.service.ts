@@ -2,14 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Destino } from './destino.interface';
 import { randomUUID } from 'crypto';
 import { OpenAIApi, Configuration } from 'openai';
+import { Supabase } from '../lib/supabaseClient';
 
 @Injectable()
 export class DestinosService {
-  private readonly destinos: Destino[] = [];
   private openaiConfig: Configuration;
   private openai: OpenAIApi;
 
-  constructor() {
+  constructor(private readonly supabase: Supabase) {
     this.openaiConfig = new Configuration({
       apiKey: process.env.OPENAI_API_KEY,
     });
@@ -25,45 +25,65 @@ export class DestinosService {
       newDestino.textoDescritivo = await this.generateDescriptiveText(destino.nome);
     }
 
-    this.destinos.push(newDestino);
-    return newDestino;
+    const { data, error } = await this.supabase.getClient().from('destinos').insert([newDestino]).select();
+    if (error) throw error;
+    if (!data) throw new Error('Failed to create destino');
+    return data[0];
   }
 
-  findAll(): Destino[] {
-    return this.destinos;
+  async findAll(): Promise<Destino[]> {
+    let { data: destinos, error } = await this.supabase
+      .getClient()
+      .from('destinos')
+      .select('*')
+
+    if (error) throw error;
+
+    return destinos;
   }
 
-  findByName(nome: string): Destino[] {
-    return this.destinos.filter(destino => destino.nome.includes(nome));
+  async findByName(nome: string): Promise<Destino[]> {
+    let { data: destinos, error } = await this.supabase
+      .getClient()
+      .from('destinos')
+      .select('*')
+      .ilike('nome', `%${nome}%`);
+
+    if (error) throw error;
+
+    return destinos;
   }
 
-  findById(id: string): Destino {
-    const destino = this.destinos.find(dest => dest.id === id);
-    if (!destino) {
-      throw new NotFoundException('Destino não encontrado');
-    }
-    return destino;
+  async findById(id: string): Promise<Destino> {
+    let { data: destinos, error } = await this.supabase
+      .getClient()
+      .from('destinos')
+      .select('*')
+      .eq('id', id);
+
+    if (error) throw error;
+    if (!destinos || destinos.length === 0) throw new NotFoundException('Destino não encontrado');
+
+    return destinos[0];
   }
 
-  updateDestino(id: string, destino: Destino): Destino {
-    const index = this.destinos.findIndex((dest) => dest.id === id);
-    if (index !== -1) {
-      this.destinos[index] = { id, ...destino };
-      return this.destinos[index];
-    } else {
-      throw new NotFoundException(`Destino com o ID ${id} não encontrado`);
-    }
+  async updateDestino(id: string, destino: Destino): Promise<Destino> {
+    const { data, error } = await this.supabase
+      .getClient()
+      .from('destinos')
+      .update(destino)
+      .match({ id: id })
+      .select();
+
+    if (error) throw error;
+    if (!data) throw new Error('Failed to update destino');
+
+    return data[0];
   }
 
-  deleteDestino(id: string) {
-    const index = this.destinos.findIndex((dest) => dest.id === id);
-    if (index !== -1) {
-      this.destinos.splice(index, 1);
-    } else {
-      throw new NotFoundException(`Destino com o ID ${id} não encontrado`);
-    }
-
-    return {};
+  async deleteDestino(id: string): Promise<void> {
+    const { error } = await this.supabase.getClient().from('destinos').delete().match({ id });
+    if (error) throw error;
   }
 
   public async generateDescriptiveText(destination: string): Promise<string> {
