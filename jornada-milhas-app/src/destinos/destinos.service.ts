@@ -18,8 +18,7 @@ export class DestinosService {
   }
 
   async createDestino(destino: Destino): Promise<Destino> {
-    const id = randomUUID();
-    const newDestino = { id, ...destino };
+    const newDestino = { ...destino };
 
     if (!destino.textoDescritivo) {
       newDestino.textoDescritivo = await this.generateDescriptiveText(destino.nome);
@@ -43,6 +42,7 @@ export class DestinosService {
   }
 
   async findByName(nome: string): Promise<Destino[]> {
+    console.log("Nome: " + nome);
     let { data: destinos, error } = await this.supabase
       .getClient()
       .from('destinos')
@@ -106,11 +106,11 @@ export class DestinosService {
         frequency_penalty: 0,
         presence_penalty: 0,
       });
-    } catch (error) {
+    } catch (error) { 
       console.log(error);
       return '';
     }
 
-    return gptResponse.data.choices[0].message;
+    return gptResponse.data.choices[0].message.content;
   }
 }

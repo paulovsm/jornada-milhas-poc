@@ -12,20 +12,21 @@ export class DestinosController {
   }
 
   @Get()
-  findAll(): Destino[] {                                                                                                                                                                            
-    return this.destinosService.findAll(); 
-  }
-
-  @Get()
-  findByName(@Query('nome') nome: string): any {
+  async findByName(@Query('nome') nome: string): Promise<any> {
     if (nome) {
-      const destinos = this.destinosService.findByName(nome);
+      let destinos = await this.destinosService.findByName(nome);
+
       if (destinos.length === 0) {
         return { mensagem: 'Nenhum destino foi encontrado' };
       }
       return destinos;
     }
     return this.destinosService.findAll();
+  }
+
+  @Get()
+  findAll() {                                          
+    return this.destinosService.findAll(); 
   }
 
   @Get(':id')
