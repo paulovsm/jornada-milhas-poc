@@ -124,7 +124,7 @@ describe('DepoimentosService', () => {
     expect(mockSupabaseClient.match).toHaveBeenCalledWith({ id });
   });
 
-  it('should throw an error if delete failed', async () => {
+  it('should throw an error if delete depoimento failed', async () => {
     const id = '1';
     const errorMessage = 'Error occurred';
 
